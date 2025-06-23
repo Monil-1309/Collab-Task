@@ -29,8 +29,8 @@ const typeColors = {
 export function TaskCard({ task }: TaskCardProps) {
   const router = useRouter()
 
-  const completedSubtasks = task.subtasks.filter((st) => st.completed).length
-  const totalSubtasks = task.subtasks.length
+  const completedSubtasks = task?.subtasks?.filter((st) => st.completed).length
+  const totalSubtasks = task?.subtasks?.length
   const progress = totalSubtasks > 0 ? (completedSubtasks / totalSubtasks) * 100 : 0
 
   const handleClick = () => {
@@ -62,7 +62,7 @@ export function TaskCard({ task }: TaskCardProps) {
         {task.description && <p className="text-xs text-muted-foreground line-clamp-2">{task.description}</p>}
 
         {/* Labels */}
-        {task.labels.length > 0 && (
+        {task?.labels?.length > 0 && (
           <div className="flex flex-wrap gap-1">
             {task.labels.slice(0, 3).map((label) => (
               <Badge key={label} variant="outline" className="text-xs">
@@ -108,7 +108,7 @@ export function TaskCard({ task }: TaskCardProps) {
               </div>
             )}
 
-            {task.comments.length > 0 && (
+            {task?.comments?.length > 0 && (
               <span className="text-xs text-muted-foreground">
                 {task.comments.length} comment{task.comments.length !== 1 ? "s" : ""}
               </span>

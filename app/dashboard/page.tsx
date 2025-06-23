@@ -35,7 +35,14 @@ export default function DashboardPage() {
       try {
         const res = await fetch("/api/tasks");
         const data = await res.json();
-        if (data.success) setTasks(data.data);
+        if (data.success) {
+          // Ensure each task has a unique id
+          const tasksWithId = data.data.map((task: any, idx: number) => ({
+            ...task,
+            id: task.id || task._id || crypto.randomUUID() || idx.toString(),
+          }));
+          setTasks(tasksWithId);
+        }
       } catch (e) {
         // handle error
       } finally {
