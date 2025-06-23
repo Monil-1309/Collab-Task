@@ -1,25 +1,58 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { ProtectedRoute } from "@/components/protected-route"
-import { DashboardLayout } from "@/components/dashboard-layout"
-import { ProjectGrid } from "@/components/project-grid"
-import { ProjectModal } from "@/components/project-modal"
-import { Button } from "@/components/ui/button"
-import { Plus, Search } from "lucide-react"
-import { Input } from "@/components/ui/input"
-import { useProjects } from "@/hooks/use-projects"
+import { useState, useEffect } from "react";
+import { ProtectedRoute } from "@/components/protected-route";
+import { DashboardLayout } from "@/components/dashboard-layout";
+import { ProjectGrid } from "@/components/project-grid";
+import { ProjectModal } from "@/components/project-modal";
+import { Button } from "@/components/ui/button";
+import { Plus, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import type { Project } from "@/hooks/use-projects";
 
 export default function ProjectsPage() {
-  const [isProjectModalOpen, setIsProjectModalOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
-  const { projects, addProject } = useProjects()
+  const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch("/api/Project");
+        const data = await res.json();
+        if (data.success) setProjects(data.data);
+      } catch (e) {
+        // handle error
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProjects();
+  }, []);
+
+  const addProject = async (
+    project: Omit<Project, "id" | "createdAt" | "updatedAt">
+  ) => {
+    try {
+      const res = await fetch("/api/Project", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(project),
+      });
+      const data = await res.json();
+      if (data.success) setProjects((prev) => [...prev, data.data]);
+    } catch (e) {
+      // handle error
+    }
+  };
 
   const filteredProjects = projects.filter(
     (project) =>
       project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      project.description.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
+      project.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <ProtectedRoute>
@@ -28,9 +61,14 @@ export default function ProjectsPage() {
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold">Projects</h1>
-              <p className="text-muted-foreground">Organize your work into projects</p>
+              <p className="text-muted-foreground">
+                Organize your work into projects
+              </p>
             </div>
-            <Button onClick={() => setIsProjectModalOpen(true)} className="flex items-center gap-2">
+            <Button
+              onClick={() => setIsProjectModalOpen(true)}
+              className="flex items-center gap-2"
+            >
               <Plus className="h-4 w-4" />
               New Project
             </Button>
@@ -49,8 +87,12 @@ export default function ProjectsPage() {
           <ProjectGrid projects={filteredProjects} />
         </div>
 
-        <ProjectModal isOpen={isProjectModalOpen} onClose={() => setIsProjectModalOpen(false)} onSave={addProject} />
+        <ProjectModal
+          isOpen={isProjectModalOpen}
+          onClose={() => setIsProjectModalOpen(false)}
+          onSave={addProject}
+        />
       </DashboardLayout>
     </ProtectedRoute>
-  )
+  );
 }

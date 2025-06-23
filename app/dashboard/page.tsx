@@ -1,56 +1,88 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { ProtectedRoute } from "@/components/protected-route"
-import { DashboardLayout } from "@/components/dashboard-layout"
-import { BoardView } from "@/components/board-view"
-import { ListView } from "@/components/list-view"
-import { CalendarView } from "@/components/calendar-view"
-import { TableView } from "@/components/table-view"
-import { TimelineView } from "@/components/timeline-view"
-import { SearchAndFilter } from "@/components/search-and-filter"
-import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
-import { TaskModal } from "@/components/task-modal"
-import { useTasks } from "@/hooks/use-tasks"
+import { useState, useEffect } from "react";
+import { ProtectedRoute } from "@/components/protected-route";
+import { DashboardLayout } from "@/components/dashboard-layout";
+import { BoardView } from "@/components/board-view";
+import { ListView } from "@/components/list-view";
+import { CalendarView } from "@/components/calendar-view";
+import { TableView } from "@/components/table-view";
+import { TimelineView } from "@/components/timeline-view";
+import { SearchAndFilter } from "@/components/search-and-filter";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { TaskModal } from "@/components/task-modal";
+import type { Task } from "@/hooks/use-tasks";
 
-export type ViewMode = "board" | "list" | "calendar" | "table" | "timeline"
+export type ViewMode = "board" | "list" | "calendar" | "table" | "timeline";
 
 export default function DashboardPage() {
-  const [currentView, setCurrentView] = useState<ViewMode>("board")
-  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
+  const [currentView, setCurrentView] = useState<ViewMode>("board");
+  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState({
     status: "",
     priority: "",
     assignee: "",
     type: "",
-  })
+  });
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const { tasks, addTask } = useTasks()
+  useEffect(() => {
+    const fetchTasks = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch("/api/tasks");
+        const data = await res.json();
+        if (data.success) setTasks(data.data);
+      } catch (e) {
+        // handle error
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTasks();
+  }, []);
+
+  const addTask = async (
+    task: Omit<Task, "id" | "createdAt" | "updatedAt">
+  ) => {
+    try {
+      const res = await fetch("/api/tasks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(task),
+      });
+      const data = await res.json();
+      if (data.success) setTasks((prev) => [...prev, data.data]);
+    } catch (e) {
+      // handle error
+    }
+  };
 
   const renderView = () => {
     const viewProps = {
       tasks,
       searchQuery,
       filters,
-    }
+    };
 
     switch (currentView) {
       case "board":
-        return <BoardView {...viewProps} />
+        return <BoardView {...viewProps} />;
       case "list":
-        return <ListView {...viewProps} />
+        return <ListView {...viewProps} />;
       case "calendar":
-        return <CalendarView {...viewProps} />
+        return <CalendarView {...viewProps} />;
       case "table":
-        return <TableView {...viewProps} />
+        return <TableView {...viewProps} />;
       case "timeline":
-        return <TimelineView {...viewProps} />
+        return <TimelineView {...viewProps} />;
       default:
-        return <BoardView {...viewProps} />
+        return <BoardView {...viewProps} />;
     }
-  }
+  };
 
   return (
     <ProtectedRoute>
@@ -59,9 +91,14 @@ export default function DashboardPage() {
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold">Dashboard</h1>
-              <p className="text-muted-foreground">Manage your tasks and projects efficiently</p>
+              <p className="text-muted-foreground">
+                Manage your tasks and projects efficiently
+              </p>
             </div>
-            <Button onClick={() => setIsTaskModalOpen(true)} className="flex items-center gap-2">
+            <Button
+              onClick={() => setIsTaskModalOpen(true)}
+              className="flex items-center gap-2"
+            >
               <Plus className="h-4 w-4" />
               Add Task
             </Button>
@@ -74,11 +111,17 @@ export default function DashboardPage() {
             onFiltersChange={setFilters}
           />
 
-          <div className="min-h-[600px]">{renderView()}</div>
+          <div className="min-h-[600px]">
+            {loading ? <div>Loading tasks...</div> : renderView()}
+          </div>
         </div>
 
-        <TaskModal isOpen={isTaskModalOpen} onClose={() => setIsTaskModalOpen(false)} onSave={addTask} />
+        <TaskModal
+          isOpen={isTaskModalOpen}
+          onClose={() => setIsTaskModalOpen(false)}
+          onSave={addTask}
+        />
       </DashboardLayout>
     </ProtectedRoute>
-  )
+  );
 }
