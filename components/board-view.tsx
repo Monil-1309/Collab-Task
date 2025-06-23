@@ -47,7 +47,6 @@ const columns = [
 ] as const;
 
 export function BoardView({ tasks, searchQuery, filters }: BoardViewProps) {
-  console.log("tasks", tasks);
   const { moveTask, addTask } = useTasks();
   const {
     draggedItem,
