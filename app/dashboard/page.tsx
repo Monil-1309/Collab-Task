@@ -52,21 +52,23 @@ export default function DashboardPage() {
     fetchTasks();
   }, []);
 
-  const addTask = async (
-    task: Omit<Task, "id" | "createdAt" | "updatedAt">
-  ) => {
+  const addTask = async (task: Task) => {
+    console.log("before try Adding task:", task);
     try {
       const res = await fetch("/api/tasks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(task),
+        body: JSON.stringify(task), // ✅ sending single task
       });
       const data = await res.json();
+      console.log("after json Response from addTask:", data);
       if (data.success) setTasks((prev) => [...prev, data.data]);
+      console.log("Task added successfully:", data.data);
     } catch (e) {
-      // handle error
+      console.error("Error adding task:", e);
     }
   };
+  
 
   const renderView = () => {
     const viewProps = {
@@ -77,7 +79,7 @@ export default function DashboardPage() {
 
     switch (currentView) {
       case "board":
-        return <BoardView {...viewProps} />;
+        return <BoardView {...viewProps} addTask={addTask} />;
       case "list":
         return <ListView {...viewProps} />;
       case "calendar":
@@ -87,7 +89,7 @@ export default function DashboardPage() {
       case "timeline":
         return <TimelineView {...viewProps} />;
       default:
-        return <BoardView {...viewProps} />;
+        return <BoardView {...viewProps} addTask={addTask} />;
     }
   };
 

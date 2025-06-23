@@ -54,7 +54,7 @@ export function TaskCard({ task }: TaskCardProps) {
           <h4 className="font-medium text-sm line-clamp-2 flex-1">{task.title}</h4>
           <Badge variant="secondary" className={cn("text-xs", priorityColors[task.priority])}>
             <Flag className="w-3 h-3 mr-1" />
-            {task.priority}
+            {task?.priority}
           </Badge>
         </div>
 

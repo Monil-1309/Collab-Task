@@ -18,6 +18,7 @@ interface BoardViewProps {
     assignee: string;
     type: string;
   };
+  addTask: (task: Omit<Task, "id" | "createdAt" | "updatedAt">) => void;
 }
 
 const columns = [
@@ -46,8 +47,13 @@ const columns = [
   },
 ] as const;
 
-export function BoardView({ tasks, searchQuery, filters }: BoardViewProps) {
-  const { moveTask, addTask } = useTasks();
+export function BoardView({
+  tasks,
+  searchQuery,
+  filters,
+  addTask,
+}: BoardViewProps) {
+  const { moveTask } = useTasks();
   const {
     draggedItem,
     handleDragStart,

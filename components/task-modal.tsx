@@ -1,59 +1,76 @@
-"use client"
+"use client";
 
-import type React from "react"
-
-import { useState, useEffect } from "react"
-import { X, Plus } from "lucide-react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Badge } from "@/components/ui/badge"
-import { useAuth } from "@/hooks/use-auth"
-import type { Task } from "@/hooks/use-tasks"
+import type React from "react";
+import { useState, useEffect } from "react";
+import { X, Plus } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/hooks/use-auth";
+import { Task } from "@/hooks/use-tasks";
 
 interface TaskModalProps {
-  isOpen: boolean
-  onClose: () => void
-  onSave: (task: Omit<Task, "id" | "createdAt" | "updatedAt">) => void
-  task?: Task
-  defaultStatus?: Task["status"]
+  isOpen: boolean;
+  onClose: () => void;
+  onSave: (task: Omit<Task, "id" | "createdAt" | "updatedAt">) => void;
+  task?: Task;
+  defaultStatus?: Task["status"];
 }
 
-export function TaskModal({ isOpen, onClose, onSave, task, defaultStatus }: TaskModalProps) {
-  const { users } = useAuth()
+export function TaskModal({
+  isOpen,
+  onClose,
+  onSave,
+  task,
+  defaultStatus,
+}: TaskModalProps) {
+  const { users } = useAuth();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     status: defaultStatus || ("backlog" as Task["status"]),
     priority: "medium" as Task["priority"],
     type: "feature" as Task["type"],
-    assignee: "",
+    assignee: "unassigned", // changed from ""
     dueDate: "",
     labels: [] as string[],
     projectId: "",
     subtasks: [] as any[],
     comments: [] as any[],
-  })
-  const [newLabel, setNewLabel] = useState("")
+  });
+  const [newLabel, setNewLabel] = useState("");
 
   useEffect(() => {
     if (task) {
+      console.log("Editing task:", task);
       setFormData({
         title: task.title,
         description: task.description,
         status: task.status,
         priority: task.priority,
         type: task.type,
-        assignee: task.assignee || "",
+        assignee: task.assignee || "unassigned", // changed from ""
         dueDate: task.dueDate || "",
         labels: task.labels,
         projectId: task.projectId || "",
         subtasks: task.subtasks,
         comments: task.comments,
-      })
+      });
     } else {
       setFormData({
         title: "",
@@ -61,47 +78,47 @@ export function TaskModal({ isOpen, onClose, onSave, task, defaultStatus }: Task
         status: defaultStatus || "backlog",
         priority: "medium",
         type: "feature",
-        assignee: "",
+        assignee: "unassigned", // changed from ""
         dueDate: "",
         labels: [],
         projectId: "",
         subtasks: [],
         comments: [],
-      })
+      });
     }
-  }, [task, defaultStatus, isOpen])
+  }, [task, defaultStatus, isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!formData.title.trim()) return
+    e.preventDefault();
+    if (!formData.title.trim()) return;
 
-    onSave(formData)
-    onClose()
-  }
+    onSave(formData);
+    onClose();
+  };
 
   const addLabel = () => {
     if (newLabel.trim() && !formData.labels.includes(newLabel.trim())) {
       setFormData((prev) => ({
         ...prev,
         labels: [...prev.labels, newLabel.trim()],
-      }))
-      setNewLabel("")
+      }));
+      setNewLabel("");
     }
-  }
+  };
 
   const removeLabel = (label: string) => {
     setFormData((prev) => ({
       ...prev,
       labels: prev.labels.filter((l) => l !== label),
-    }))
-  }
+    }));
+  };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
-      e.preventDefault()
-      addLabel()
+      e.preventDefault();
+      addLabel();
     }
-  }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -117,7 +134,9 @@ export function TaskModal({ isOpen, onClose, onSave, task, defaultStatus }: Task
             <Input
               id="title"
               value={formData.title}
-              onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, title: e.target.value }))
+              }
               placeholder="Enter task title"
               required
             />
@@ -129,7 +148,12 @@ export function TaskModal({ isOpen, onClose, onSave, task, defaultStatus }: Task
             <Textarea
               id="description"
               value={formData.description}
-              onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  description: e.target.value,
+                }))
+              }
               placeholder="Enter task description"
               rows={3}
             />
@@ -141,7 +165,12 @@ export function TaskModal({ isOpen, onClose, onSave, task, defaultStatus }: Task
               <Label>Status</Label>
               <Select
                 value={formData.status}
-                onValueChange={(value) => setFormData((prev) => ({ ...prev, status: value as Task["status"] }))}
+                onValueChange={(value) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    status: value as Task["status"],
+                  }))
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -162,7 +191,12 @@ export function TaskModal({ isOpen, onClose, onSave, task, defaultStatus }: Task
               <Label>Priority</Label>
               <Select
                 value={formData.priority}
-                onValueChange={(value) => setFormData((prev) => ({ ...prev, priority: value as Task["priority"] }))}
+                onValueChange={(value) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    priority: value as Task["priority"],
+                  }))
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -180,7 +214,12 @@ export function TaskModal({ isOpen, onClose, onSave, task, defaultStatus }: Task
               <Label>Type</Label>
               <Select
                 value={formData.type}
-                onValueChange={(value) => setFormData((prev) => ({ ...prev, type: value as Task["type"] }))}
+                onValueChange={(value) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    type: value as Task["type"],
+                  }))
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -200,7 +239,9 @@ export function TaskModal({ isOpen, onClose, onSave, task, defaultStatus }: Task
               <Label>Assignee</Label>
               <Select
                 value={formData.assignee}
-                onValueChange={(value) => setFormData((prev) => ({ ...prev, assignee: value }))}
+                onValueChange={(value) =>
+                  setFormData((prev) => ({ ...prev, assignee: value }))
+                }
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select assignee" />
@@ -222,7 +263,9 @@ export function TaskModal({ isOpen, onClose, onSave, task, defaultStatus }: Task
                 id="dueDate"
                 type="date"
                 value={formData.dueDate}
-                onChange={(e) => setFormData((prev) => ({ ...prev, dueDate: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, dueDate: e.target.value }))
+                }
               />
             </div>
           </div>
@@ -247,7 +290,10 @@ export function TaskModal({ isOpen, onClose, onSave, task, defaultStatus }: Task
                 {formData.labels.map((label) => (
                   <Badge key={label} variant="secondary" className="gap-1">
                     {label}
-                    <X className="h-3 w-3 cursor-pointer" onClick={() => removeLabel(label)} />
+                    <X
+                      className="h-3 w-3 cursor-pointer"
+                      onClick={() => removeLabel(label)}
+                    />
                   </Badge>
                 ))}
               </div>
@@ -259,10 +305,12 @@ export function TaskModal({ isOpen, onClose, onSave, task, defaultStatus }: Task
             <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>
-            <Button type="submit">{task ? "Update Task" : "Create Task"}</Button>
+            <Button type="submit">
+              {task ? "Update Task" : "Create Task"}
+            </Button>
           </div>
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
