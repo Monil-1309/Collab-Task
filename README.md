@@ -66,7 +66,7 @@ A modern, feature-rich task management application built with Next.js, TypeScrip
 
 1. **Clone the repository**
    \`\`\`bash
-   git clone https://github.com/yourusername/collabtask-pro.git
+   git clone [https://github.com/yourusername/collabtask-pro.git](https://github.com/Monil-1309/Collab-Task.git)
    cd collabtask-pro
    \`\`\`
 
@@ -113,31 +113,6 @@ Since this uses localStorage-based authentication, you can log in with any email
 - **Prettier** - Code formatting
 - **TypeScript** - Static type checking
 
-## 📁 Project Structure
-
-\`\`\`
-collabtask-pro/
-├── app/                    # Next.js App Router pages
-│   ├── dashboard/         # Dashboard page
-│   ├── login/            # Authentication pages
-│   ├── projects/         # Project management
-│   ├── reports/          # Analytics and reports
-│   ├── settings/         # User settings
-│   └── tasks/            # Task details
-├── components/            # Reusable UI components
-│   ├── ui/               # shadcn/ui components
-│   ├── board-view.tsx    # Kanban board component
-│   ├── task-card.tsx     # Task card component
-│   └── ...
-├── hooks/                # Custom React hooks
-│   ├── use-auth.ts       # Authentication logic
-│   ├── use-tasks.ts      # Task management
-│   ├── use-projects.ts   # Project management
-│   └── ...
-├── lib/                  # Utility functions
-└── public/               # Static assets
-\`\`\`
-
 ## 🎯 Key Features Explained
 
 ### Authentication System
@@ -164,20 +139,6 @@ All data is stored in localStorage, including:
 - User preferences and settings
 - Theme and notification preferences
 
-## 🔧 Customization
-
-### Adding New Task Types
-Edit the task type options in \`components/task-modal.tsx\`:
-
-\`\`\`typescript
-const taskTypes = [
-  { value: "bug", label: "Bug" },
-  { value: "feature", label: "Feature" },
-  { value: "improvement", label: "Improvement" },
-  { value: "research", label: "Research" }, // Add new type
-]
-\`\`\`
-
 ### Customizing Themes
 Modify the theme configuration in \`tailwind.config.ts\` and \`app/globals.css\`.
 
@@ -191,36 +152,6 @@ CollabTask Pro is fully responsive and provides:
 - **Touch-optimized interactions** for drag and drop
 - **Swipe gestures** for mobile navigation
 - **Responsive layouts** that adapt to screen size
-
-## 🚀 Deployment
-
-### Deploy to Vercel (Recommended)
-
-1. **Push to GitHub**
-   \`\`\`bash
-   git add .
-   git commit -m "Initial commit"
-   git push origin main
-   \`\`\`
-
-2. **Deploy with Vercel**
-   - Visit [vercel.com](https://vercel.com)
-   - Import your GitHub repository
-   - Deploy with default settings
-
-### Deploy to Netlify
-
-1. **Build the project**
-   \`\`\`bash
-   npm run build
-   \`\`\`
-
-2. **Deploy to Netlify**
-   - Drag and drop the \`out\` folder to Netlify
-   - Or connect your GitHub repository
-
-### Environment Variables
-No environment variables are required as the app uses localStorage for all data persistence.
 
 ## 🤝 Contributing
 
@@ -247,10 +178,6 @@ We welcome contributions! Please follow these steps:
 - Maintain responsive design principles
 - Add proper error handling
 - Include loading states for async operations
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
@@ -285,11 +212,4 @@ If you encounter any issues or have questions:
 **Built with ❤️ using Next.js, TypeScript, and Tailwind CSS**
 
 ⭐ **Star this repository if you find it helpful!**
-\`\`\`
-
-## 📊 Project Stats
-
-![GitHub stars](https://img.shields.io/github/stars/yourusername/collabtask-pro)
-![GitHub forks](https://img.shields.io/github/forks/yourusername/collabtask-pro)
-![GitHub issues](https://img.shields.io/github/issues/yourusername/collabtask-pro)
-![GitHub license](https://img.shields.io/github/license/yourusername/collabtask-pro)
+\`\`\`\
