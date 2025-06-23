@@ -20,7 +20,7 @@ export default function ProjectsPage() {
     const fetchProjects = async () => {
       setLoading(true);
       try {
-        const res = await fetch("/api/Project");
+        const res = await fetch("/api/projects");
         const data = await res.json();
         if (data.success) setProjects(data.data);
       } catch (e) {
