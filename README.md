@@ -2,8 +2,6 @@
 
 A modern, feature-rich task management application built with Next.js, TypeScript, and Tailwind CSS. CollabTask Pro provides teams with powerful tools to organize, track, and collaborate on projects efficiently.
 
-![CollabTask Pro Dashboard](https://via.placeholder.com/800x400/3b82f6/ffffff?text=CollabTask+Pro+Dashboard)
-
 ## ✨ Features
 
 ### 🔐 Authentication & Security
