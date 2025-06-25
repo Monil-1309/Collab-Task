@@ -49,7 +49,7 @@ export function TaskModal({
     assignee: "unassigned", // changed from ""
     dueDate: "",
     labels: [] as string[],
-    projectId: "",
+    projectId: "685c30dfa4087a2a9560b128",
     subtasks: [] as any[],
     comments: [] as any[],
   });
@@ -67,7 +67,7 @@ export function TaskModal({
         assignee: task.assignee || "unassigned", // changed from ""
         dueDate: task.dueDate || "",
         labels: task.labels,
-        projectId: task.projectId || "",
+        projectId: task.projectId || "685c30dfa4087a2a9560b128",
         subtasks: task.subtasks,
         comments: task.comments,
       });
@@ -81,7 +81,7 @@ export function TaskModal({
         assignee: "unassigned", // changed from ""
         dueDate: "",
         labels: [],
-        projectId: "",
+        projectId: "685c30dfa4087a2a9560b128",
         subtasks: [],
         comments: [],
       });

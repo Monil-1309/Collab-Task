@@ -25,6 +25,7 @@ export default async function handler(req, res) {
       }
     case "POST":
       try {
+        console.log("body:", body);
         const task = await Task.create(body);
         console.log("Task created:", task, body);
         return res.status(201).json({ success: true, data: task });

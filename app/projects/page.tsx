@@ -36,7 +36,7 @@ export default function ProjectsPage() {
     project: Omit<Project, "id" | "createdAt" | "updatedAt">
   ) => {
     try {
-      const res = await fetch("/api/Project", {
+      const res = await fetch("/api/projects", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(project),

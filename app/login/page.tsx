@@ -84,8 +84,7 @@ export default function LoginPage() {
           title: "Login Successful",
           description: "Welcome back to CollabTask Pro!",
         });
-        router.push("/dashboard");
-        console.log("User is authenticated, redirecting to dashboard");
+        router.push("/dashboard");        
       } else {
         toast({
           title: "Login Failed",

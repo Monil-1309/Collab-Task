@@ -60,6 +60,7 @@ export default function DashboardPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(task), // ✅ sending single task
       });
+      console.log("after fetch Response from addTask:", JSON.stringify(task));
       const data = await res.json();
       console.log("after json Response from addTask:", data);
       if (data.success) setTasks((prev) => [...prev, data.data]);
@@ -68,7 +69,6 @@ export default function DashboardPage() {
       console.error("Error adding task:", e);
     }
   };
-  
 
   const renderView = () => {
     const viewProps = {
